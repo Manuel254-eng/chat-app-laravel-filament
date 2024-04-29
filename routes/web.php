@@ -17,5 +17,3 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('/download/csv', DownloadCSV::class)->name('download.csv');

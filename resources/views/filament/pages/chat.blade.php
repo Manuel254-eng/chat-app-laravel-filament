@@ -1,42 +1,4 @@
   <x-filament-panels::page>
-  <style>
-    .main-container{
-        width: 100%;
-        aspect-ratio: 5/2;
-        margin: auto;
-        overflow-x: hidden;
-overflow-y: scroll;
-scroll-snap-type: y mandatory;
-    }
-    .message-container {
-        display: flex;
-        flex-direction: column; 
-        width: 100%;
-    }
-
-    .left-message {
-        background-color: #e1e1e1;
-        align-self: flex-start; 
-        border-radius: 8px;
-        padding: 10px;
-        margin-bottom: 10px;
-    }
-
-    .right-message {
-        background-color: #13B5EA;
-        align-self: flex-end; 
-        border-radius: 8px;
-        padding: 10px;
-        margin-bottom: 10px;
-    }
-    .message {
-         padding: 10px;
-         border-radius: 8px;
-         
-         width: 40% ;
-        }
-    
-</style> 
     <form wire:submit="create">
     <p class="conversation-heading">Conversation with {{ $otherPartyName }}</p>
         <div class="main-container mt-6" id="message-container">
@@ -87,21 +49,4 @@ scroll-snap-type: y mandatory;
             </div>
         @endif
     </form>
-    <script>
-    // Scroll to the bottom of the message container
-    function scrollToBottom() {
-        var messageContainer = document.getElementById('message-container');
-        messageContainer.scrollTop = messageContainer.scrollHeight;
-    }
-
-    // Call scrollToBottom function when the page is loaded
-    window.addEventListener('load', function() {
-        scrollToBottom();
-    });
-
-    // Call scrollToBottom function after Livewire updates the DOM
-    Livewire.hook('message.processed', function() {
-        scrollToBottom();
-    });
-</script>
 </x-filament-panels::page>

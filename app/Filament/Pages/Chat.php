@@ -2,7 +2,6 @@
 
 namespace App\Filament\Pages;
 
-use App\Services\GPTEngine;
 use Exception;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -24,11 +23,11 @@ class Chat extends Page
     public ?array $data = [];
     public bool $waitingForResponse = false;
     public string $reply = '';
-    public string $lastQuestion = '';
     public string $lastMessage = '';
     public Collection $allMessages;
     public array $replies = [];
     public String $otherPartyName;
+    public $refresh = false;
 
     public function form(Form $form): Form
     {
@@ -60,9 +59,9 @@ class Chat extends Page
             // Fetch other party's name
             $this->otherPartyName = User::find($otherPartyId)->name;
         } else {
-            // Handle case where there are no messages or no other party found
-            $this->allMessages = collect(); // Empty collection
-            $this->otherPartyName = 'No other party'; // Default value
+            // Handle case where there are no messages 
+            $this->allMessages = collect(); 
+            $this->otherPartyName = 'No other party'; 
         }
     }
     
@@ -71,10 +70,7 @@ class Chat extends Page
     public function create(): void
     {
         $messageText = $this->form->getState()['message'];
-        
-        // Determine the authenticated user's ID
         $senderId = Auth::id();
-        // Determine the recipient's ID
         $recipientId = $senderId == 2 ? 1 : 2;
     
         // Create a new message instance
@@ -87,23 +83,8 @@ class Chat extends Page
         // Add the reply message to the replies array
         $this->replies[] = [
             'text' => $messageText,
-            'time' => now()->format('M j, Y H:i A'), // Format the current date and time
+            'time' => now()->format('M j, Y H:i A'), 
         ];
-        
-        // Optionally, you can redirect the user or perform other actions here
     }
 
-    #[On('queryAI')]
-    public function queryAI($message)
-    {
-        try {
-            $this->reply = (new GPTEngine())->ask($message);
-        } catch (Exception $e) {
-            info($e->getMessage());
-            $this->reply = 'Sorry, the AI assistant was unable to answer your question. Please try to rephrase your question.';
-            $this->data['message'] = $this->lastQuestion;
-        }
-        $this->lastQuestion = $message;
-        $this->waitingForResponse = false;
-    }
 }
