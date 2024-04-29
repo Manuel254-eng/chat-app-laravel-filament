@@ -59,7 +59,7 @@ class Chat extends Page
             // Fetch other party's name
             $this->otherPartyName = User::find($otherPartyId)->name;
         } else {
-            // Handle case where there are no messages 
+            // case with no messages 
             $this->allMessages = collect(); 
             $this->otherPartyName = 'No other party'; 
         }
@@ -73,14 +73,14 @@ class Chat extends Page
         $senderId = Auth::id();
         $recipientId = $senderId == 2 ? 1 : 2;
     
-        // Create a new message instance
+        // new message 
         $message = new Message();
         $message->text = $messageText;
         $message->sender_id = $senderId;
         $message->receiver_id = $recipientId;
         $message->save();
         
-        // Add the reply message to the replies array
+        // Add the reply to array
         $this->replies[] = [
             'text' => $messageText,
             'time' => now()->format('M j, Y H:i A'), 
